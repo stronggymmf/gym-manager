@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRONG GYM - PRO MANAGER</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand" style="justify-content: center;">
+                <img src="images/logo.jpg.png" alt="Logo" class="brand-icon">
+            </div>
+            
+            <nav class="nav-links">
+                <button class="nav-btn active" data-target="students">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    Alumnos & Pagos
+                </button>
+                <button class="nav-btn" data-target="plans">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                    Planes de Entreno
+                </button>
+            </nav>
+            
+            <!-- Sidebar Context: Months (Visible only when students view is active) -->
+            <div class="sidebar-context" id="sidebar-months">
+                <div class="context-header">
+                    <h3>Meses Activos</h3>
+                </div>
+                <div class="months-list" id="months-list">
+                    <!-- Meses dinámicos -->
+                </div>
+                <form id="form-add-month" class="add-month-form">
+                    <input type="text" id="input-month-name" placeholder="Ej: Abril 2024" required autocomplete="off">
+                    <button type="submit" class="btn-icon-primary" title="Agregar Mes">
+                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-container">
+            
+            <!-- VISTA: ALUMNOS Y PAGOS -->
+            <section id="view-students" class="view-section active">
+                <header class="view-header">
+                    <div class="header-titles">
+                        <h2 id="header-month-title">Selecciona un mes</h2>
+                        <p class="subtitle" id="header-month-subtitle">Gestión de ingresos y asistencia</p>
+                    </div>
+                </header>
+
+                <div id="students-content" class="content-wrapper hidden">
+                    <!-- Dashboard -->
+                    <div class="stats-grid">
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon-wrapper income">
+                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                            </div>
+                            <div class="stat-info">
+                                <p>Ingresos Recaudados</p>
+                                <h3 id="stat-revenue">$0</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon-wrapper users">
+                                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                            </div>
+                            <div class="stat-info">
+                                <p>Total de Alumnos</p>
+                                <h3 id="stat-total-students">0</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid">
+                        <div class="chart-card glass-panel">
+                            <h4 class="chart-title">Género</h4>
+                            <div class="chart-container">
+                                <canvas id="gender-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card glass-panel">
+                            <h4 class="chart-title">Días Más Concurridos</h4>
+                            <div class="chart-container">
+                                <canvas id="days-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add Student Form -->
+                    <div class="glass-panel form-panel">
+                        <h3>Agregar Alumno</h3>
+                        <form id="form-add-student" class="inline-form">
+                            <div class="input-group">
+                                <input type="text" id="input-student-name" placeholder="Nombre del alumno" required autocomplete="off">
+                            </div>
+                            <div class="input-group" style="min-width: 140px;">
+                                <div class="days-checkbox-group" id="input-student-days">
+                                    <label><input type="checkbox" value="Lunes"> L</label>
+                                    <label><input type="checkbox" value="Martes"> M</label>
+                                    <label><input type="checkbox" value="Miércoles"> X</label>
+                                    <label><input type="checkbox" value="Jueves"> J</label>
+                                    <label><input type="checkbox" value="Viernes"> V</label>
+                                    <label><input type="checkbox" value="Sábado"> S</label>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <input type="text" id="input-student-schedule" placeholder="Horario (ej: 18:00)" required autocomplete="off">
+                            </div>
+                            <div class="input-group">
+                                <select id="input-student-gender" required>
+                                    <option value="" disabled selected>Género</option>
+                                    <option value="Hombre">Hombre</option>
+                                    <option value="Mujer">Mujer</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <input type="number" id="input-student-amount" placeholder="Cuota ($)" min="0" required>
+                            </div>
+                            <button type="submit" class="btn primary">Agregar</button>
+                        </form>
+                    </div>
+
+                    <!-- Students Table -->
+                    <div class="glass-panel table-panel">
+                        <div class="panel-header">
+                            <h3>Listado de Alumnos</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="modern-table">
+                                <thead>
+                                    <tr>
+                                        <th>Alumno</th>
+                                        <th>Día</th>
+                                        <th>Horario</th>
+                                        <th>Cuota</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-students-body">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                            <div id="empty-students" class="empty-state">
+                                <div class="empty-icon">👥</div>
+                                <p>No hay alumnos registrados en este mes.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- No Month Selected State -->
+                <div id="state-no-month" class="global-empty-state">
+                    <div class="empty-illustration">📅</div>
+                    <h2>Ningún mes seleccionado</h2>
+                    <p>Por favor, selecciona un mes en el panel lateral o crea uno nuevo para empezar a gestionar tus alumnos.</p>
+                </div>
+            </section>
+
+            <!-- VISTA: PLANES DE ENTRENAMIENTO -->
+            <section id="view-plans" class="view-section hidden">
+                <header class="view-header">
+                    <div class="header-titles">
+                        <h2>Planes de Entrenamiento</h2>
+                        <p class="subtitle" id="header-plans-subtitle">Gestiona todas tus rutinas</p>
+                    </div>
+                    <button id="btn-open-create-routine" class="btn primary action-btn">+ Nueva Rutina</button>
+                    <button id="btn-back-to-routines" class="btn secondary action-btn hidden">
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        Volver a Rutinas
+                    </button>
+                </header>
+
+                <!-- Routines List View -->
+                <div id="routines-list-view" class="content-wrapper">
+                    <div class="routines-grid" id="routines-grid">
+                        <!-- Dynamic content -->
+                    </div>
+                    <div id="empty-routines" class="global-empty-state">
+                        <div class="empty-illustration">💪</div>
+                        <h2>No tienes rutinas creadas</h2>
+                        <p>Haz clic en "Nueva Rutina" para comenzar a diseñar tus planes de entrenamiento.</p>
+                    </div>
+                </div>
+
+                <!-- Routine Detail View -->
+                <div id="routine-detail-view" class="content-wrapper hidden">
+                    <div class="routine-meta glass-panel">
+                        <h3 id="detail-routine-name">Nombre Rutina</h3>
+                        <span id="detail-routine-date" class="badge outline">Fecha</span>
+                    </div>
+
+                    <!-- Add Exercise Form -->
+                    <div class="glass-panel form-panel">
+                        <h3>Agregar Ejercicio</h3>
+                        <form id="form-add-exercise" class="inline-form">
+                            <div class="input-group flex-2">
+                                <input type="text" id="input-exe-name" placeholder="Nombre del ejercicio" required autocomplete="off">
+                            </div>
+                            <div class="input-group">
+                                <input type="number" id="input-exe-sets" placeholder="Series" min="1" required>
+                            </div>
+                            <div class="input-group">
+                                <input type="text" id="input-exe-reps" placeholder="Reps (ej: 10-12)" required autocomplete="off">
+                            </div>
+                            <button type="submit" class="btn primary">Agregar</button>
+                        </form>
+                    </div>
+
+                    <!-- Exercises Table -->
+                    <div class="glass-panel table-panel">
+                        <div class="panel-header">
+                            <h3>Ejercicios de la Rutina</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="modern-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ejercicio</th>
+                                        <th>Series</th>
+                                        <th>Repeticiones</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-exercises-body">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                            <div id="empty-exercises" class="empty-state">
+                                <div class="empty-icon">🏋️</div>
+                                <p>Esta rutina aún no tiene ejercicios.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODALS -->
+
+    <!-- Edit Student Modal -->
+    <div id="modal-edit-student" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h3>Editar Alumno</h3>
+                <button class="btn-close-modal">×</button>
+            </div>
+            <form id="form-edit-student" class="modal-form">
+                <input type="hidden" id="edit-student-id">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" id="edit-student-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Días</label>
+                    <div class="days-checkbox-group edit-mode" id="edit-student-days">
+                        <label><input type="checkbox" value="Lunes"> L</label>
+                        <label><input type="checkbox" value="Martes"> M</label>
+                        <label><input type="checkbox" value="Miércoles"> X</label>
+                        <label><input type="checkbox" value="Jueves"> J</label>
+                        <label><input type="checkbox" value="Viernes"> V</label>
+                        <label><input type="checkbox" value="Sábado"> S</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Horario</label>
+                    <input type="text" id="edit-student-schedule" required>
+                </div>
+                <div class="form-group">
+                    <label>Género</label>
+                    <select id="edit-student-gender" required>
+                        <option value="Hombre">Hombre</option>
+                        <option value="Mujer">Mujer</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Cuota ($)</label>
+                    <input type="number" id="edit-student-amount" min="0" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn primary full-width">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Exercise Modal -->
+    <div id="modal-edit-exercise" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h3>Editar Ejercicio</h3>
+                <button class="btn-close-modal">×</button>
+            </div>
+            <form id="form-edit-exercise" class="modal-form">
+                <input type="hidden" id="edit-exe-id">
+                <div class="form-group">
+                    <label>Ejercicio</label>
+                    <input type="text" id="edit-exe-name" required>
+                </div>
+                <div class="form-group">
+                    <label>Series</label>
+                    <input type="number" id="edit-exe-sets" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label>Repeticiones</label>
+                    <input type="text" id="edit-exe-reps" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn primary full-width">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Routine Modal -->
+    <div id="modal-create-routine" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h3>Nueva Rutina</h3>
+                <button class="btn-close-modal">×</button>
+            </div>
+            <form id="form-create-routine" class="modal-form">
+                <div class="form-group">
+                    <label>Nombre de la Rutina</label>
+                    <input type="text" id="create-routine-name" placeholder="Ej: Pecho y Tríceps" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Fecha</label>
+                    <input type="date" id="create-routine-date" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn primary full-width">Crear Rutina</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div id="modal-confirm" class="modal hidden">
+        <div class="modal-overlay"></div>
+        <div class="modal-content glass-panel confirm-panel">
+            <div class="confirm-icon">⚠️</div>
+            <h3 id="confirm-title">¿Estás seguro?</h3>
+            <p id="confirm-message">Esta acción no se puede deshacer.</p>
+            <div class="modal-actions horizontal">
+                <button id="btn-confirm-cancel" class="btn secondary">Cancelar</button>
+                <button id="btn-confirm-ok" class="btn danger">Sí, Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

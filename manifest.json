@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Gym Manager",
+  "version": "1.0",
+  "description": "Extensión para gestionar tu gimnasio, alumnos y rutinas de entrenamiento.",
+  "action": {
+    "default_title": "Abrir Gym Manager"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage"
+  ]
+}
